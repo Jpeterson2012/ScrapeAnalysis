@@ -143,6 +143,8 @@ def split_df(df):
         analysis(temp)
     return dfs
 
+analysis(df)
+
 # df.to_csv('customsyms.csv', index=False)
 conn.commit()
 cur.close()

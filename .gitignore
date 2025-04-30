@@ -1,6 +1,9 @@
 analysis.session.sql
 sql.py
 util.py
+bookshop.py
+bookshopdata2.csv
+
 
 # Editor directories and files
 .vscode/*

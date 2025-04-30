@@ -1,0 +1,53 @@
+body{
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    background: linear-gradient(to right, black, darkred);
+}
+th{
+    gap: 25px;
+}
+.main,form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+#line{
+    display: flex;
+}
+button{
+    height: 45px;
+    width: 130px;
+    background-color: white;
+    font-size: 30px;
+    font-weight: bold;
+
+}
+table{
+    margin-left: auto;
+    margin-right: auto;
+    /* border-spacing: 30px; */
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+th,td{
+    border: 1px solid #333;
+    border-collapse: collapse;
+    padding: 10px 15px;
+
+}
+textarea{
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    color: black;
+    width: 160px; 
+    height: 300px;
+    font-size: 20px;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="{{url_for('static', filename='index.js')}}"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='index.css') }}">
+
+    <title>Fello DB</title>
+</head>
+<body>
+    <h1>{{ message }} Result(s) Found...</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Capacity</th>
+            <th>Serial Number</th>
+            <th>CDN/Phone#</th>
+            <th>IMEI</th>
+            <th>ICCID</th>
+            <th>Barcode</th>
+            <th>Network</th>
+        </tr>
+        {% for row in results %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td>{{ row[4] }}</td>
+            <td>{{ row[5] }}</td>
+            <td>{{ row[6] }}</td>
+            <td>{{ row[7] }}</td>
+            <td>{{ row[8] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
