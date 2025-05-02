@@ -9,6 +9,19 @@
     <title>Market Trader</title>
 </head>
 <body>
+    <div class="container">
+        <div class="header1">
+            {% for t,p in data %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+            {% for t,p in data %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+        </div>        
+                    
+    </div>
     <h1 style="text-align: center;" >{{ message }}</h1>
     <table>
         <tr>
@@ -17,7 +30,7 @@
             <th>High</th>
             <th>Low</th>
             <th>Close</th>
-            <th>Adj_close</th>
+            <th>Adj Close</th>
             <th>Volume</th>            
         </tr>
         {% for row in results %}
@@ -32,5 +45,14 @@
         </tr>
         {% endfor %}
     </table>
+    <div style="max-width: 100vw; overflow: hidden;">
+        <div style="display: flex; overflow-x: auto; gap: 10px;">
+            <img src="../static/BBands.png">
+            <img src="../static/PSRATIO.png">
+            <img src="../static/Momentum.png">
+            <img src="../static/RSI.png">
+        </div>
+    </div>
+    
 </body>
 </html>

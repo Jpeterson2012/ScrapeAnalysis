@@ -6,12 +6,22 @@ import datetime as dt
 import numpy as np  	   		 	   			  		 			     			  	   	   		 	   			  		 			     			  	   		  	   		 	   			  		 			     			  	   		  	   		 	   			  		 			     			  	   		  	   		 	   			  		 	
 import pandas as pd
 from sql import get_connection, myCors
+import random
+import StrategyLearner as sl
+
+
 
 app = Flask(__name__)
 cors = myCors(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 conn, cur = get_connection()
+
+def compute_daily_returns(df):
+        daily_returns = df.copy()
+        daily_returns = (df / df.shift(1)) - 1
+        # daily_returns.iloc[0, :] = 0 
+        return daily_returns
 
 def analysis(df):
     # df = df[::-1]
@@ -28,39 +38,25 @@ def analysis(df):
     print(f"Average Daily Return: {adr}")  		  	   		 	   			  		 			     			  	 
     print(f"Cumulative Return: {cr}\n\n")
 
-
-
-
-app = Flask(__name__)
-
-# @app.route("/getStuff/", methods=["POST"])
-# def stuff():
-#     # message = request.form.get("data")
-#     temp = request.form.get("data").splitlines()
-#     temp2 = request.form.get("data")
-#     arr = temp2.splitlines()
-#     newarr = [f'"{item}"' for item in arr]
-#     temp = ','.join(newarr)
-#     sql = f'SELECT * FROM ipads WHERE id IN ({temp})'
-#     mycursor.execute(sql)
-#     results = mycursor.fetchall()
-#     message = len(results)
-
-#     return render_template('starter.html', message = message, results = results)
+def generate_random_percentage():  
+    temp = "{:.2f}".format(random.uniform(-10, 10))
+    return [ float(temp), temp ]
 
 @app.route("/")
-def hello_world():    
+def hello_world():        
 
-    # bcodes = "F9FRP0NFGHMK,DLXQF0LPGHMK,DLXSG1BHHGC4,F9FQC232GHMK,DLXR60KXGHMG,F9FQK62YGHMG,F9FTM1DLGHMN,F9FQM1YAGHMG,DLXSD4YYHGC4,DLXQP0PNGHML,F9FVL3SPGHMN,F9FVW19XGHMN,F9FTK35TGHMN,F9FQ74M9GHMK,F9FT62PLGHMN,DLXSL14DHGC3,F9FS88K9GHMQ,F9FV33QSGHMP,F9FVV5NPGHMN,F9FWV4MFGHMN,F9FT53U0HGC4,F9FSK1KHHGC4,F9FTG45CGHMN,DLXR41DLGHMG,DLXR4463GHMG,F9FT51PCGHMN,F9FT91VFHGC3,DLXRC1Q2GHMK,DLXQG1QGGHMG,DLXS40VWGHMG,DLXSK18JHGC3,FNXDK00BGHMH,DLXQC1E4GHMM,FFKW201VGHMH,F9FQN14TGHMG,FFKV300MHGC5,DLXSDBXQHGC5,F9FXR0NJGHMN,DLXRC3LCGHMJ,DLXQ70KVGHML,FFKYC009GHMH,FFLTQ001GHMH,FFLDN008HGC5,FFLYJ079GHMN,F9FW8916GHMN,FFLW800CHGC4,F9FW56CHGHMN,FFKW302EHGC5,F9FRV14QGHMJ,F9FS809XGHML,DMPYQXEXJF88,DMPTL2UTHLJJ,GCGV8ZC3HLJJ,GCGV8W9XHLJJ,F9GV96V2HLJJ,DMPV145KHLJJ,GG7W84S7HLJJ,GCGV990CHLJJ,GCGV97U3HLJJ,DMPV11HRHLJJ,GG7W6A97HLJJ,GG7YH4H3JF88,GCTW45XYHLJL,F9FTLMPQHLJJ,F9FTVNBHHLJJ,DMPYJD50JF88,DMPX8HPCJF88,GG7YH93AJF88,GG7YJ75RJF88,DMPYKJDCJF88,GCTVTGDZHLJJ,GCTW25A5HLJJ,DMPYQSX8JF88,GG7YJD3FJF88,DMPYQUGNJF88,GCTW2MBBHLJJ,DMPYJ7SYJF88,GG7YJ5HVJF88"
-    # arr = bcodes.split("\n")
-    # newarr = [f'"{item}"' for item in arr]
-    # temp = ','.join(newarr)
-    # sql = f'SELECT * FROM ipads WHERE id IN ({temp})'
-    # # mycursor.execute('Select * from ipads where id in ("DMPWWLC9JMXJ,GG7YJ383JF88") ')
-    # mycursor.execute(sql)
-    # results = mycursor.fetchall()
+    sp500 = np.random.permutation(503)[:20].tolist()
+    sp500 = ",".join(str(i) for i in sp500)
+    
+    percents = []
+    for i in range(20):        
+        percents.append(generate_random_percentage())
+    sql = f"SELECT * FROM SP500 WHERE ID IN ({sp500})"
+    cur.execute(sql)
+    row = cur.fetchall()
+    topbar = row
 
-    stock = 'JPM'
+    stock = 'GOOG'
     cur.execute(f"SELECT * FROM {stock}")
     row = cur.fetchall()
 
@@ -71,29 +67,28 @@ def hello_world():
     #     sym.append(round(float(row[i][4]),2))
     # df = pd.DataFrame(data=sym, index=d_index, columns=[stock])
 
-    results = []
-    for i in range(10):
-        results.append([ dt.datetime.strptime(str(row[i][0]), '%Y%m%d').date(), round(float(row[i][1]), 3), round(float(row[i][2]), 3), round(float(row[i][3]), 3), 
-        round(float(row[i][4]), 3), round(float(row[i][5]), 3), row[i][6] ])
-    
-    print(results)
-    message = stock
-    
+    results = []    
+    for i in range(10):                
+        results.append([ dt.datetime.strptime(str(row[i][0]), '%Y%m%d').date(), "{:.3f}".format(row[i][1]), "{:.3f}".format(row[i][2]), "{:.3f}".format(row[i][3]), 
+        "{:.3f}".format(row[i][4]), "{:.3f}".format(row[i][5]), row[i][6] ])
+            
+    sym = []
+    d_index = []
+    # for i in range(len(row)):
+    #     d_index.append(dt.datetime.strptime(str(row[i][0]), '%Y%m%d'))
+    #     sym.append(round(float(row[i][4]),2))
+    # df = pd.DataFrame(data=sym, index=d_index, columns=[stock])
 
-    return render_template('index.html', message = message, results = results)
+    # #Call ml model on dataframe
+    # a = sl.StrategyLearner()
+    # a.add_evidence(symbol=stock,dframe=df)
+    # a.testPolicy(symbol=stock,dframe=df)
 
-# @app.route("/api/barcodes")
-# @cross_origin()
-# def oof():
-#     bcodes = "F9FRP0NFGHMK,DMPYKJDCJF88,GCTVTGDZHLJJ,GCTW25A5HLJJ,DMPYQSX8JF88,GG7YJD3FJF88,DMPYQUGNJF88,GCTW2MBBHLJJ,DMPYJ7SYJF88,GG7YJ5HVJF88"
-#     arr = bcodes.split(",")
-#     newarr = [f'"{item}"' for item in arr]
-#     temp = ','.join(newarr)
-#     sql = f'SELECT * FROM ipads WHERE id IN ({temp})'
-#     # mycursor.execute('Select * from ipads where id in ("DMPWWLC9JMXJ,GG7YJ383JF88") ')
-#     mycursor.execute(sql)
-#     results = mycursor.fetchall()
-#     # for i in range(0,len(results)):
-#     #   print(results)
-    
-#     return jsonify({"results": results})
+    # analysis(df)
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return render_template('index.html', message = stock, results = results, data=zip(topbar,percents))
+

@@ -77,7 +77,7 @@ def buySell(price,psratio,df):
         if no_trade > i:
             pass
         else:
-            if (df.iloc[i,0] < 0 and df.iloc[i,1] < 1 and df.iloc[i,2] < 0 and df.iloc[i,3] < 50):
+            if (df.iloc[i,0] < 0 and df.iloc[i,1] < 1 and df.iloc[i,2] < 0 and df.iloc[i,3] < 30):
                 # print(df.index[i])
                 
                 if last_trade == 0:    
@@ -93,7 +93,7 @@ def buySell(price,psratio,df):
                         # if no_trade > df.shape[0]:
                         #     break
 
-            if (df.iloc[i,0] > 0.5 and df.iloc[i,1] > 1 and df.iloc[i,2] > 0 and df.iloc[i,3] > 50):
+            if (df.iloc[i,0] > 1 and df.iloc[i,1] > 1 and df.iloc[i,2] > 0 and df.iloc[i,3] > 70):
                 # print(df.index[i])
                 
                 if last_trade == 0:
@@ -141,7 +141,8 @@ def plot_func(p, i, t, l1=0,l2=0, l3=['2008-01-02', '2009-01-02'], l4=['2008-03-
     ax2.tick_params(axis='y', labelcolor=color)
 
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
-    plt.show()       
+    plt.savefig(f"./static/{t}.png")
+    # plt.show()       
         
   		  	   		 	   			  		 			     			  	 
   		  	   		 	   			  		 			     			  	 
@@ -223,9 +224,9 @@ class StrategyLearner(object):
         self.learner.add_evidence(train_x, train_y)
 
         plot_func(prices[symbol], bband, 'BBands', 0, 1, d1, d2)
-        # plot_func(prices[symbol], psratio, 'PSRATIO', 1, 1,d1,d2)
-        # plot_func(prices[symbol], mtum, 'Momentum', 0, 0,d1,d2)
-        # plot_func(prices[symbol], rsii, 'RSI', 30, 70,d1,d2)
+        plot_func(prices[symbol], psratio, 'PSRATIO', 1, 1,d1,d2)
+        plot_func(prices[symbol], mtum, 'Momentum', 0, 0,d1,d2)
+        plot_func(prices[symbol], rsii, 'RSI', 30, 70,d1,d2)
  		  	   		 	   			  		 			     			  	 
   		  	   		 	   			  		 			     			  	 
     # this method should use the existing policy and test it against new data  		  	   		 	   			  		 			     			  	 
