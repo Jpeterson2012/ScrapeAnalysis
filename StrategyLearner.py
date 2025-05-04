@@ -5,6 +5,9 @@ import time
 
 import numpy as np               		 	   			  		 			     			  	 
 import pandas as pd  	
+import matplotlib as mpl
+mpl.use('agg')
+
 import matplotlib.pyplot as plt	     		 	   			  		 			     			  	 
 from util import get_data
 import RTLearner as rt	
@@ -93,7 +96,7 @@ def buySell(price,psratio,df):
                         # if no_trade > df.shape[0]:
                         #     break
 
-            if (df.iloc[i,0] > 1 and df.iloc[i,1] > 1 and df.iloc[i,2] > 0 and df.iloc[i,3] > 70):
+            if (df.iloc[i,0] > 0.85 and df.iloc[i,1] > 1 and df.iloc[i,2] > 0 and df.iloc[i,3] > 70):
                 # print(df.index[i])
                 
                 if last_trade == 0:
@@ -112,7 +115,7 @@ def buySell(price,psratio,df):
 
 
 def plot_func(p, i, t, l1=0,l2=0, l3=['2008-01-02', '2009-01-02'], l4=['2008-03-02', '2009-03-02']):
-    fig, ax1 = plt.subplots()
+    fig,ax1 = plt.subplots()
     color = 'tab:red'
     ax1.set_xlabel('Date')
     ax1.set_ylabel('Price', color=color)
@@ -287,7 +290,7 @@ class StrategyLearner(object):
         # end = time.time()
         # print(f'Time: {end - start}')
         df.insert(df.shape[1], 'Signal', yvals.T)
-        print(df)
+        # print(df)
 
         trades = prices.copy()
         for col in trades.columns:
@@ -342,11 +345,12 @@ class StrategyLearner(object):
         
         trades = trades[trades.iloc[:,0]!= 0.0]
         
-        print(trades)
+        # print(trades)
         # trade = pd.DataFrame(data = trades[symbol])
-        print(portvals.tail())
+        # print(portvals.tail())
         
-        return pd.DataFrame(data = trades[symbol])
+        return [df, trades, portvals]
+        # return pd.DataFrame(data = trades[symbol])
 
         
                                                                                                                                                                                                

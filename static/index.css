@@ -2,7 +2,7 @@ body{
     font-weight: bold;
     font-size: 20px;
     color: white;
-    background: linear-gradient(to right, black, rgb(84, 0, 0));
+    background: linear-gradient(to right, black, rgb(84, 0, 0),black);
     
 }
 th{
@@ -62,7 +62,7 @@ textarea{
 .header1{
     display: flex;
     justify-content: space-around;
-    animation: scrollText 30s reverse linear infinite;
+    animation: scrollText 50s reverse linear infinite;
     width: fit-content;
     overflow: hidden;
     
@@ -95,4 +95,52 @@ textarea{
 }
 .negative{
     color: red;
+}
+/* Scrollbar width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+    background: black;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: green;
+    border-radius: 10px;
+  }
+  .imgContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  @keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(238, 238, 238, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+#stock{
+    box-shadow: 0 0 0 0 rgb(255, 255, 255);
+    transform: scale(1);
+    animation: pulse 2s infinite;
+    width: fit-content;
+    margin-left: 50%;
+}
+h1,h2, .imgContainer p{
+    color: green;
 }

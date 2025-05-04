@@ -22,7 +22,8 @@
         </div>        
                     
     </div>
-    <h1 style="text-align: center;" >{{ message }}</h1>
+    <h1 id="stock" >{{ message }}</h1>
+    <h2>Historical Data</h2>
     <table>
         <tr>
             <th>Date</th>
@@ -35,24 +36,109 @@
         </tr>
         {% for row in results %}
         <tr>
-            <td>{{ row[0] }}</td>
-            <td>{{ row[1] }}</td>
-            <td>{{ row[2] }}</td>
-            <td>{{ row[3] }}</td>
-            <td>{{ row[4] }}</td>
-            <td>{{ row[5] }}</td>
-            <td>{{ row[6] }}</td>            
+            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[0] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[1] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[2] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[3] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[4] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[5] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[6] }}</td>            
         </tr>
         {% endfor %}
     </table>
-    <div style="max-width: 100vw; overflow: hidden;">
+
+    <h2 style="margin-top: 20px;" >Indicator Values</h2>
+    <table>
+        <tr>
+            <th>BBands</th>
+            <th>PSRATIO</th>
+            <th>Momentum</th>
+            <th>RSI</th>
+            <th>Signal</th>                   
+        </tr>
+        {% for row in tech %}
+        <tr>
+            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[0] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[1] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[2] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[3] }}</td>
+            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[4] }}</td>                        
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div style="display: flex; justify-content: center;  max-width: 100vw; margin-top: 15px;">
         <div style="display: flex; overflow-x: auto; gap: 10px;">
-            <img src="../static/BBands.png">
-            <img src="../static/PSRATIO.png">
-            <img src="../static/Momentum.png">
-            <img src="../static/RSI.png">
+            <div class="imgContainer">
+                <p>Bollinger Bands %</p>
+                <img src="../static/BBands.png">
+            </div>                
+            <div class="imgContainer">
+                <p>PSRATIO</p>
+                <img src="../static/PSRATIO.png">
+            </div>
+            <div class="imgContainer">
+                <p>Momentum</p>
+                <img src="../static/Momentum.png">
+            </div>
+            <div class="imgContainer">
+                <p>RSI</p>
+                <img src="../static/RSI.png">
+            </div>
         </div>
     </div>
+
+    <div style="display: flex;">
+        <div style="display: flex; flex-direction: column; align-items: center;" >
+            <h2 style="margin-top: 20px;" >Trades</h2>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>{{ message }}</th>
+                    <th>Cash</th>                         
+                </tr>
+                {% for row in trades %}
+                <tr>
+                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[0] }}</td>
+                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[1] }}</td>     
+                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[2] }}</td>                                    
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center;" >
+            <h2 style="margin-top: 20px;" >Portfolio Values</h2>
+            <table>
+                <tr>                        
+                    <th>Value</th>                         
+                </tr>
+                {% for row in portvals %}
+                <tr>
+                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row }}</td>                               
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center;">
+    <h2 style="margin-top: 20px;" >Metrics</h2>
+        <table>
+            <tr>
+                <th>Sharpe Ratio</th>
+                <th>Volatility</th>
+                <th>Average Daily Return</th>
+                <th>Cumulative Return</th>                              
+            </tr>        
+            <tr>
+                <td>{{ metrics[0] }}</td>
+                <td>{{ metrics[1] }}</td>
+                <td>{{ metrics[2] }}</td>
+                <td>{{ metrics[3] }}</td>                              
+            </tr>        
+        </table>
+    </div>
+    
     
 </body>
 </html>

@@ -33,10 +33,11 @@ def analysis(df):
             daily_rets.std(),
             np.sqrt(252.0) * (daily_rets.mean() / daily_rets.std()),
         ]
-    print(f"Sharpe Ratio: {sr}")  		  	   		 	   			  		 			     			  	 
-    print(f"Volatility (stdev of daily returns): {sddr}")  		  	   		 	   			  		 			     			  	 
-    print(f"Average Daily Return: {adr}")  		  	   		 	   			  		 			     			  	 
-    print(f"Cumulative Return: {cr}\n\n")
+    # print(f"Sharpe Ratio: {sr}")  		  	   		 	   			  		 			     			  	 
+    # print(f"Volatility (stdev of daily returns): {sddr}")  		  	   		 	   			  		 			     			  	 
+    # print(f"Average Daily Return: {adr}")  		  	   		 	   			  		 			     			  	 
+    # print(f"Cumulative Return: {cr}\n\n")    
+    return [sr.iloc[0], sddr.iloc[0], adr.iloc[0], cr.iloc[0]]
 
 def generate_random_percentage():  
     temp = "{:.2f}".format(random.uniform(-10, 10))
@@ -45,20 +46,25 @@ def generate_random_percentage():
 @app.route("/")
 def hello_world():        
 
-    sp500 = np.random.permutation(503)[:20].tolist()
+    sp500 = np.random.permutation(503)[:35].tolist()
     sp500 = ",".join(str(i) for i in sp500)
     
     percents = []
-    for i in range(20):        
+    for i in range(35):        
         percents.append(generate_random_percentage())
     sql = f"SELECT * FROM SP500 WHERE ID IN ({sp500})"
     cur.execute(sql)
     row = cur.fetchall()
     topbar = row
 
-    stock = 'GOOG'
+    stock = 'JPM'
     cur.execute(f"SELECT * FROM {stock}")
     row = cur.fetchall()
+    first = row[:10]
+    last = row[-10:]
+    rows = []
+    rows.extend(first)
+    rows.extend(last)
 
     # sym = []
     # d_index = []
@@ -68,27 +74,52 @@ def hello_world():
     # df = pd.DataFrame(data=sym, index=d_index, columns=[stock])
 
     results = []    
-    for i in range(10):                
-        results.append([ dt.datetime.strptime(str(row[i][0]), '%Y%m%d').date(), "{:.3f}".format(row[i][1]), "{:.3f}".format(row[i][2]), "{:.3f}".format(row[i][3]), 
-        "{:.3f}".format(row[i][4]), "{:.3f}".format(row[i][5]), row[i][6] ])
+    for i in range(len(rows)):                
+        results.append([ dt.datetime.strptime(str(rows[i][0]), '%Y%m%d').date(), "{:.2f}".format(rows[i][1]), "{:.2f}".format(rows[i][2]), "{:.2f}".format(rows[i][3]), 
+        "{:.2f}".format(rows[i][4]), "{:.2f}".format(rows[i][5]), "{:,}".format(rows[i][6]) ])
+        if (i == 9):
+            results.append(["———","———","———","———","———","———","———"])
+
             
     sym = []
     d_index = []
-    # for i in range(len(row)):
-    #     d_index.append(dt.datetime.strptime(str(row[i][0]), '%Y%m%d'))
-    #     sym.append(round(float(row[i][4]),2))
-    # df = pd.DataFrame(data=sym, index=d_index, columns=[stock])
+    for i in range(len(row)):
+        d_index.append(dt.datetime.strptime(str(row[i][0]), '%Y%m%d'))
+        sym.append(round(float(row[i][4]),2))
+    df = pd.DataFrame(data=sym, index=d_index, columns=[stock])
 
-    # #Call ml model on dataframe
-    # a = sl.StrategyLearner()
-    # a.add_evidence(symbol=stock,dframe=df)
-    # a.testPolicy(symbol=stock,dframe=df)
+    #Call ml model on dataframe
+    a = sl.StrategyLearner()
+    a.add_evidence(symbol=stock,dframe=df)
+    df1,df2, df3 = a.testPolicy(symbol=stock,dframe=df)
+    df1.columns = pd.RangeIndex(df1.shape[1]) #using RangeIndex
 
-    # analysis(df)
+    # print(df2)        
+
+    rows2 = []
+    rows2.extend(df1.head(5).to_numpy().tolist())
+    rows2.append(["———","———","———","———","———"])
+    rows2.extend(df1.tail(5).to_numpy().tolist())    
+
+    df2.insert(0, 'index_col', df2.index)
+    df2['index_col']  = pd.to_datetime(df2['index_col'])
+    df2['index_col'] = df2['index_col'].dt.date
+    
+    rows3 = []
+    rows3.extend(df2.to_numpy().tolist())        
+
+    rows4 = []
+    rows4.extend(df3.head(5))
+    rows4.append("———")
+    rows4.extend(df3.tail(5))    
+       
+    
+
+    metrics = analysis(df)
 
     conn.commit()
     cur.close()
     conn.close()
 
-    return render_template('index.html', message = stock, results = results, data=zip(topbar,percents))
+    return render_template('index.html', message = stock, results = results, data=zip(topbar,percents), tech = rows2, trades = rows3, portvals = rows4, metrics = metrics)
 
