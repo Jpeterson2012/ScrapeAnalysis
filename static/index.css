@@ -3,66 +3,25 @@ body{
     font-size: 20px;
     color: white;
     background: linear-gradient(to right, black, rgb(84, 0, 0),black);
-    
+    overflow: hidden;
+    animation: fadeIn 1.5s;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-th{
-    gap: 25px;
-}
-.main,form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
 
-}
-#line{
-    display: flex;
-}
-button{
-    height: 45px;
-    width: 130px;
-    background-color: white;
-    font-size: 30px;
-    font-weight: bold;
 
-}
-table{
-    margin-left: auto;
-    margin-right: auto;
-    /* border-spacing: 30px; */
-    table-layout: fixed;
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 15px;
-}
-th,td{
-    border: 1px solid #333;
-    border-collapse: collapse;
-    padding: 10px 15px;
-
-}
-td{
-    text-align: center;
-}
-img{
-    width: 500px;
-    height: auto;    
-}
-textarea{
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white;
-    color: black;
-    width: 160px; 
-    height: 300px;
-    font-size: 20px;
-}
 .header1{
     display: flex;
     justify-content: space-around;
-    animation: scrollText 50s reverse linear infinite;
+    animation: scrollText 80s reverse linear infinite;
+    width: fit-content;
+    overflow: hidden;
+    
+    white-space: nowrap;    
+}
+.header2{
+    display: flex;
+    justify-content: space-around;
+    animation: scrollText 80s linear infinite;
     width: fit-content;
     overflow: hidden;
     
@@ -80,7 +39,15 @@ textarea{
     to {
       transform: translateX(-50%);
     }
-  }
+}
+@keyframes fadeIn {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
 .container{        
     margin-bottom: 25px;
     height: fit-content;
@@ -89,6 +56,52 @@ textarea{
     
     -webikit-mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
     mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
+    z-index: 4;
+}
+.container2{        
+    margin-top: 15vw;
+    transform: rotate(90deg);
+    position: absolute;
+    left: 80.5vw;
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+    
+    height: fit-content;
+    max-width: 37vw;
+    overflow: hidden;    
+    
+    -webikit-mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
+    mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
+    z-index: 3;
+}
+.container3{            
+    height: fit-content;
+    max-width: 98vw;
+    overflow: hidden;    
+    position: absolute;
+    bottom: 0;
+    
+    -webikit-mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
+    mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
+    z-index: 2;
+}
+.container4{        
+    margin-top: 15vw;
+    transform: rotate(270deg);
+   position: absolute;
+   right:80.5vw;
+   padding: 0;
+   margin-left: 0;
+    margin-right: 0;
+    
+    height: fit-content;
+    max-width: 37vw;
+    overflow: hidden;    
+    
+    -webikit-mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
+    mask: linear-gradient(90deg, transparent, white 20% 80%, transparent);
+    z-index: 1;
 }
 .positive{
     color: green;
@@ -96,51 +109,189 @@ textarea{
 .negative{
     color: red;
 }
-/* Scrollbar width */
-::-webkit-scrollbar {
-    width: 10px;
-  }
+
   
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
-    border-radius: 10px;
-    background: black;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: green;
-    border-radius: 10px;
-  }
-  .imgContainer{
+h1,h2{
+    color: green;
+}
+a.button {
+    padding: 5px 15px;
+    border: 1px outset buttonborder;
+    border-radius: 3px;
+    color: buttontext;
+    background-color: green;
+    text-decoration: none;
+}
+.indexContainer{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 15vh;
+}
+@media(max-width: 700px){  
+  body{
+    max-width: 99vw;
   }
-  @keyframes pulse {
-    0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(238, 238, 238, 0.7);
-    }
+  
+  h1{
+    font-size: 21px;    
+    width: 0;  
+    max-width: 75vw;    
+    animation: 
+      typing2 3.5s steps(30, end),
+      blink-caret .7s step-end infinite;  
+      
+    animation-fill-mode: forwards;
+  }
+  h2{
+    font-size: 19px;
+  }  
+  .container2, .container4{
+    display: none;
+  }  
+}
+@media(max-height: 500px){
+  body{
+    max-width: 99vw;
+  }
+  
+  h1{
+    font-size: 21px;    
+    width: 0;  
+    max-width: 43vw;    
+    animation: 
+      typing2 3.5s steps(30, end),
+      blink-caret .7s step-end infinite;  
+      
+    animation-fill-mode: forwards;
+  }
+  h2{
+    font-size: 19px;
+  }  
+  .container2, .container4{
+    display: none;
+  }
+  .indexContainer{
+    margin-top: -2vh;
+  }
+  #svg{
+    height: 55px;
+    width: 55px;
+  }
+}
 
-    70% {
-        transform: scale(1);
-        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+@media(min-height: 1200px){
+    .container2{
+        min-width: 42vw;
+        max-width: 42vw;
+        margin-top: 530px;
+        left: 78vw;
     }
+    .container4{
+        min-width: 42vw;
+        max-width: 42vw;
+        margin-top: 530px;
+        right: 78vw;
+    }
+    .indexContainer{
+        margin-top: 20vh;
+    }
+}
+h1 {
+  
+  width: 0;  
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .15em solid black; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  animation: 
+    typing 4s steps(30, end),
+    blink-caret .7s step-end infinite;  
+    
+  animation-fill-mode: forwards;
+}
 
-    100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-    }
+/* The typing effect */
+@keyframes typing {
+  50% { width: 0 }
+  100% { width: 610px }
 }
-#stock{
-    box-shadow: 0 0 0 0 rgb(255, 255, 255);
-    transform: scale(1);
-    animation: pulse 2s infinite;
-    width: fit-content;
-    margin-left: 50%;
+@keyframes typing2 {
+  50% { width: 0 }
+  100% { width: 200px }
 }
-h1,h2, .imgContainer p{
-    color: green;
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: red }
 }
+
+#svgContainer{
+    display: none;;
+}  
+  
+#svg {
+    display: block;
+    height: 100px;
+    width: 100px;
+    position: relative;
+    
+    overflow: visible;
+  }
+  #svg circle {
+      fill:rgba(0,0,0,0);
+    stroke-width:31.8309886184;
+    stroke-dasharray: 0,0,0,100;
+    stroke-dashoffset: 25;
+    -webkit-animation: pie1 4.5s infinite ease both;
+    animation: pie1 4.5s infinite ease both;
+  }
+  #svg .pie1 {
+    stroke:hsl(0, 0%, 100%);
+  }
+  #svg .pie2 {
+    stroke:hsl(0, 70%, 50%);
+    -webkit-animation-name: pie2;
+    animation-name: pie2;
+  }
+  #svg .pie3 {
+    stroke:hsl(111, 54%, 37%);
+    -webkit-animation-name: pie3;
+    animation-name: pie3;
+  }
+  #svg .pie4 {
+    stroke:hsl(0, 0%, 0%);
+    -webkit-animation-name: pie4;
+    animation-name: pie4;
+  }
+  
+  /* 1st pie is 40% */
+  @-webkit-keyframes pie1 {
+    50%,100% {stroke-dasharray: 40,60,0,0;}
+  }
+  @keyframes pie1 {
+    50%,100% {stroke-dasharray: 40,60,0,0;}
+  }
+  /* 2nd pie is 30% */
+  @-webkit-keyframes pie2 {
+    50%,100% {stroke-dasharray: 0,40,30,30;}
+  }
+  @keyframes pie2 {
+    50%,100% {stroke-dasharray: 0,40,30,30;}
+  }
+  /* 3rd pie is 30% */
+  @-webkit-keyframes pie3 {
+    50%,100% {stroke-dasharray: 0,70,20,10;}
+  }
+  @keyframes pie3 {
+    50%,100% {stroke-dasharray: 0,70,20,10;}
+  }
+  /* 4th pie is 10% */
+  @-webkit-keyframes pie4 {
+    50%,100% {stroke-dasharray: 0,90,10,0;}
+  }
+  @keyframes pie4 {
+    50%,100% {stroke-dasharray: 0,90,10,0;}
+  }

@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="{{url_for('static', filename='index.js')}}"></script>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='index.css') }}">
+    <link rel="icon" type="image" href="{{ url_for('static', filename='stonks.jpg') }}" />
 
     <title>Market Trader</title>
 </head>
-<body>
+<body>   
+    <script>
+        function showSVG(){            
+            document.getElementById('svgContainer').style.display = 'flex'
+            document.getElementById('svgContainer').style.flexDirection= 'column'
+            document.getElementById('svgContainer').style.alignItems = 'center'
+            let temp = document.querySelectorAll('a')
+            setTimeout(()=>{    
+                temp.forEach(a => a.removeAttribute('href'))
+            },300)            
+        }        
+    </script>
     <div class="container">
         <div class="header1">
             {% for t,p in data %}
@@ -19,126 +31,66 @@
             <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
             <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
             {% endfor %}
-        </div>        
-                    
+        </div>                            
     </div>
-    <h1 id="stock" >{{ message }}</h1>
-    <h2>Historical Data</h2>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Open</th>
-            <th>High</th>
-            <th>Low</th>
-            <th>Close</th>
-            <th>Adj Close</th>
-            <th>Volume</th>            
-        </tr>
-        {% for row in results %}
-        <tr>
-            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[0] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[1] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[2] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[3] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[4] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[5] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 10 }}" >{{ row[6] }}</td>            
-        </tr>
-        {% endfor %}
-    </table>
-
-    <h2 style="margin-top: 20px;" >Indicator Values</h2>
-    <table>
-        <tr>
-            <th>BBands</th>
-            <th>PSRATIO</th>
-            <th>Momentum</th>
-            <th>RSI</th>
-            <th>Signal</th>                   
-        </tr>
-        {% for row in tech %}
-        <tr>
-            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[0] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[1] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[2] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[3] }}</td>
-            <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[4] }}</td>                        
-        </tr>
-        {% endfor %}
-    </table>
-
-    <div style="display: flex; justify-content: center;  max-width: 100vw; margin-top: 15px;">
-        <div style="display: flex; overflow-x: auto; gap: 10px;">
-            <div class="imgContainer">
-                <p>Bollinger Bands %</p>
-                <img src="../static/BBands.png">
-            </div>                
-            <div class="imgContainer">
-                <p>PSRATIO</p>
-                <img src="../static/PSRATIO.png">
-            </div>
-            <div class="imgContainer">
-                <p>Momentum</p>
-                <img src="../static/Momentum.png">
-            </div>
-            <div class="imgContainer">
-                <p>RSI</p>
-                <img src="../static/RSI.png">
-            </div>
-        </div>
+    <div class="container2">
+        <div class="header1">
+            {% for t,p in data2 %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+            {% for t,p in data2 %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+        </div>                            
     </div>
-
-    <div style="display: flex;">
-        <div style="display: flex; flex-direction: column; align-items: center;" >
-            <h2 style="margin-top: 20px;" >Trades</h2>
-            <table>
-                <tr>
-                    <th>Date</th>
-                    <th>{{ message }}</th>
-                    <th>Cash</th>                         
-                </tr>
-                {% for row in trades %}
-                <tr>
-                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[0] }}</td>
-                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[1] }}</td>     
-                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row[2] }}</td>                                    
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div style="display: flex; flex-direction: column; align-items: center;" >
-            <h2 style="margin-top: 20px;" >Portfolio Values</h2>
-            <table>
-                <tr>                        
-                    <th>Value</th>                         
-                </tr>
-                {% for row in portvals %}
-                <tr>
-                    <td class="{{ 'negative' if loop.index0 == 5 }}" >{{ row }}</td>                               
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
+    <div class="container3">
+        <div class="header2">
+            {% for t,p in data3 %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+            {% for t,p in data3 %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+        </div>                            
     </div>
-
-    <div style="display: flex; flex-direction: column; align-items: center;">
-    <h2 style="margin-top: 20px;" >Metrics</h2>
-        <table>
-            <tr>
-                <th>Sharpe Ratio</th>
-                <th>Volatility</th>
-                <th>Average Daily Return</th>
-                <th>Cumulative Return</th>                              
-            </tr>        
-            <tr>
-                <td>{{ metrics[0] }}</td>
-                <td>{{ metrics[1] }}</td>
-                <td>{{ metrics[2] }}</td>
-                <td>{{ metrics[3] }}</td>                              
-            </tr>        
-        </table>
+    <div class="container4">
+        <div class="header1">
+            {% for t,p in data4 %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+            {% for t,p in data4 %}
+            <p style="margin-right: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif;" >{{ t[1] }}</p>            
+            <p class="innerHeader {{ 'positive' if p[0] > 0 else 'negative' }}" >({{"+" if p[0] > 0}}{{ p[1] }})</p>
+            {% endfor %}
+        </div>                            
     </div>
     
+    <div class="indexContainer" style="display: flex; flex-direction: column; align-items: center;">
+        <div style="display: inline-block;" ></div>
+        <h1>Simple Market Trader</h1>        
+        <h2>Select stock for demonstration</h2>
+        <div>
+            <a id="button1" type="button" class="button" href="{{ url_for('stock', data ='JPM') }}" onclick="showSVG()">JPM</a>        
+            <a id="button2" type="button" class="button" href="{{ url_for('stock', data ='GOOG') }}" onclick="showSVG()">GOOG</a>
+            <a id="button3" type="button" class="button" href="{{ url_for('stock', data ='AAPL') }}" onclick="showSVG()">AAPL</a>
+        </div>
+        <div id="svgContainer">
+            <h3>Loading...</h3>
+            <svg id="svg" viewBox="0 0 63.6619772368 63.6619772368">
+                <circle class="pie1" cx="31.8309886184" cy="31.8309886184" r="15.9154943092"/>
+                <circle class="pie2" cx="31.8309886184" cy="31.8309886184" r="15.9154943092"/>
+                <circle class="pie3" cx="31.8309886184" cy="31.8309886184" r="15.9154943092"/>
+                <circle class="pie4" cx="31.8309886184" cy="31.8309886184" r="15.9154943092"/>
+            </svg>    
+        </div>
+    </div>
+    
+
     
 </body>
 </html>

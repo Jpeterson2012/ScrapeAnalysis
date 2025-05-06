@@ -1,6 +1,6 @@
 #using conda activate scrape
-#to run: flask --app display run
-
+#to run: flask --app [app name name ie index] run
+import atexit
 from flask import Flask, render_template, request, jsonify
 import datetime as dt
 import numpy as np  	   		 	   			  		 			     			  	   	   		 	   			  		 			     			  	   		  	   		 	   			  		 			     			  	   		  	   		 	   			  		 			     			  	   		  	   		 	   			  		 	
@@ -8,7 +8,6 @@ import pandas as pd
 from sql import get_connection, myCors
 import random
 import StrategyLearner as sl
-
 
 
 app = Flask(__name__)
@@ -37,41 +36,60 @@ def analysis(df):
     # print(f"Volatility (stdev of daily returns): {sddr}")  		  	   		 	   			  		 			     			  	 
     # print(f"Average Daily Return: {adr}")  		  	   		 	   			  		 			     			  	 
     # print(f"Cumulative Return: {cr}\n\n")    
-    return [sr.iloc[0], sddr.iloc[0], adr.iloc[0], cr.iloc[0]]
+    return [sr.iloc[0].round(4), sddr.iloc[0].round(4), adr.iloc[0].round(4), cr.iloc[0].round(4)]
 
 def generate_random_percentage():  
     temp = "{:.2f}".format(random.uniform(-10, 10))
     return [ float(temp), temp ]
 
-@app.route("/")
-def hello_world():        
-
-    sp500 = np.random.permutation(503)[:35].tolist()
+def topBar():
+    sp500 = np.random.permutation(503)[:50].tolist()
     sp500 = ",".join(str(i) for i in sp500)
     
     percents = []
-    for i in range(35):        
+    for i in range(50):        
         percents.append(generate_random_percentage())
     sql = f"SELECT * FROM SP500 WHERE ID IN ({sp500})"
     cur.execute(sql)
     row = cur.fetchall()
-    topbar = row
+    return row, percents
 
-    stock = 'JPM'
-    cur.execute(f"SELECT * FROM {stock}")
+def shutdown():
+    conn.commit()
+    cur.close()
+    conn.close()
+
+atexit.register(shutdown)
+
+@app.route("/")
+def index():        
+    topbar,percents = topbar2,percents2 = topbar3,percents3 = topbar4,percents4 = topBar()
+    return render_template('index.html',data=zip(topbar,percents), data2=zip(topbar2,percents2),data3=zip(topbar3,percents3),data4=zip(topbar4,percents4))
+
+@app.route('/<path:path>')
+def catch_all(path):
+    return redirect(url_for('index'))
+    
+
+@app.route("/stock/<data>")
+def stock(data):       
+    
+    topbar,percents = topBar()
+
+    stock = data
+    sql = f"SELECT * FROM {stock} WHERE id BETWEEN 20070806 AND 20121230"
+    # sql = f"SELECT * FROM {stock}"
+    cur.execute(sql)
     row = cur.fetchall()
-    first = row[:10]
+    
+    for i, r in enumerate(row):
+        if 20100104 in r:
+            index = i    
+    first = row[index:index + 10]
     last = row[-10:]
     rows = []
     rows.extend(first)
-    rows.extend(last)
-
-    # sym = []
-    # d_index = []
-    # for i in range(len(row)):
-    #     d_index.append(dt.datetime.strptime(str(row[i][0]), '%Y%m%d'))
-    #     sym.append(round(float(row[i][4]),2))
-    # df = pd.DataFrame(data=sym, index=d_index, columns=[stock])
+    rows.extend(last)   
 
     results = []    
     for i in range(len(rows)):                
@@ -91,11 +109,13 @@ def hello_world():
     #Call ml model on dataframe
     a = sl.StrategyLearner()
     a.add_evidence(symbol=stock,dframe=df)
-    df1,df2, df3 = a.testPolicy(symbol=stock,dframe=df)
+    df1,df2, df3 = a.testPolicy(symbol=stock,dframe=df)    
     df1.columns = pd.RangeIndex(df1.shape[1]) #using RangeIndex
-
-    # print(df2)        
-
+    
+    df1.insert(0, 'index_col', df1.index)
+    df1['index_col']  = pd.to_datetime(df1['index_col'])
+    df1['index_col'] = df1['index_col'].dt.date
+    
     rows2 = []
     rows2.extend(df1.head(5).to_numpy().tolist())
     rows2.append(["———","———","———","———","———"])
@@ -104,22 +124,29 @@ def hello_world():
     df2.insert(0, 'index_col', df2.index)
     df2['index_col']  = pd.to_datetime(df2['index_col'])
     df2['index_col'] = df2['index_col'].dt.date
+
+    df2[stock] = df2[stock].astype(int)
+    df2['Cash'] = df2['Cash'].astype(int)    
     
     rows3 = []
     rows3.extend(df2.to_numpy().tolist())        
 
-    rows4 = []
-    rows4.extend(df3.head(5))
-    rows4.append("———")
-    rows4.extend(df3.tail(5))    
-       
+    df3 = df3.to_frame()    
     
 
+    df3.insert(0, 'index_col', df3.index)
+    df3['index_col']  = pd.to_datetime(df3['index_col'])
+    df3['index_col'] = df3['index_col'].dt.date    
+
+    print(df3.head())
+    
+    df3[0] = df3[0].astype(int)
+    
+    rows4 = []
+    rows4.extend(df3.head(5).to_numpy().tolist())
+    rows4.append("———")
+    rows4.extend(df3.tail(5).to_numpy().tolist())        
+           
     metrics = analysis(df)
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    return render_template('index.html', message = stock, results = results, data=zip(topbar,percents), tech = rows2, trades = rows3, portvals = rows4, metrics = metrics)
-
+    
+    return render_template('starter.html', message = stock, results = results, data=zip(topbar,percents), tech = rows2, trades = rows3, portvals = rows4, metrics = metrics)

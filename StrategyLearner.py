@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib as mpl
 mpl.use('agg')
 
-import matplotlib.pyplot as plt	     		 	   			  		 			     			  	 
+import matplotlib.pyplot as plt	     
 from util import get_data
 import RTLearner as rt	
 import BagLearner as bt
@@ -113,6 +113,15 @@ def buySell(price,psratio,df):
                         #     break
     return dates1, dates2
 
+def plot_data(df, title="Stock price", xlabel="Date", ylabel="Price"):  		  	   		 	   			  		 			     			  	        		 	   			  		 			     			  	 
+  		  	   		 	   			  		 			     			  	 
+    """Plot stock prices with a custom title and meaningful axis labels."""  		  	   		 	   			  		 			     			  	 
+    ax = df.plot(title=title, fontsize=12)  		  	   		 	   			  		 			     			  	 
+    ax.set_xlabel(xlabel)  		  	   		 	   			  		 			     			  	 
+    ax.set_ylabel(ylabel)  		  	   		 	   			  		 			     			  	 
+    plt.savefig('./static/stock.png')
+    plt.close()
+
 
 def plot_func(p, i, t, l1=0,l2=0, l3=['2008-01-02', '2009-01-02'], l4=['2008-03-02', '2009-03-02']):
     fig,ax1 = plt.subplots()
@@ -144,7 +153,9 @@ def plot_func(p, i, t, l1=0,l2=0, l3=['2008-01-02', '2009-01-02'], l4=['2008-03-
     ax2.tick_params(axis='y', labelcolor=color)
 
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    fig.autofmt_xdate()    
     plt.savefig(f"./static/{t}.png")
+    plt.close()
     # plt.show()       
         
   		  	   		 	   			  		 			     			  	 
@@ -219,6 +230,7 @@ class StrategyLearner(object):
         df.insert(df.shape[1], 'Signal', [0 for i in range(df.shape[0])])
         
         d1, d2 = buySell(prices,psratio,df)
+        print(d1)
 
         train_x = df.iloc[:, :-1]
         train_y = df.iloc[:, -1]
@@ -226,6 +238,7 @@ class StrategyLearner(object):
         self.learner = bt.BagLearner(learner=rt.RTLearner, kwargs={'leaf_size':5},bags = 20)
         self.learner.add_evidence(train_x, train_y)
 
+        plot_data(prices[symbol], symbol)
         plot_func(prices[symbol], bband, 'BBands', 0, 1, d1, d2)
         plot_func(prices[symbol], psratio, 'PSRATIO', 1, 1,d1,d2)
         plot_func(prices[symbol], mtum, 'Momentum', 0, 0,d1,d2)
@@ -290,6 +303,7 @@ class StrategyLearner(object):
         # end = time.time()
         # print(f'Time: {end - start}')
         df.insert(df.shape[1], 'Signal', yvals.T)
+        df = df.round(3)
         # print(df)
 
         trades = prices.copy()
@@ -339,11 +353,14 @@ class StrategyLearner(object):
             values.iloc[i, -1] = holdings.iloc[i, -1]
         
         portvals = (values.sum(axis=1))
-        
+        # portvals = portvals.round(2)
     
         
         
         trades = trades[trades.iloc[:,0]!= 0.0]
+        # trades = trades.round(2)
+        
+
         
         # print(trades)
         # trade = pd.DataFrame(data = trades[symbol])
