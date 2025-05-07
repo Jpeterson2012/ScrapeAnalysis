@@ -137,8 +137,7 @@ def stock(data):
     df3.insert(0, 'index_col', df3.index)
     df3['index_col']  = pd.to_datetime(df3['index_col'])
     df3['index_col'] = df3['index_col'].dt.date    
-
-    print(df3.head())
+    
     
     df3[0] = df3[0].astype(int)
     
@@ -150,3 +149,6 @@ def stock(data):
     metrics = analysis(df)
     
     return render_template('starter.html', message = stock, results = results, data=zip(topbar,percents), tech = rows2, trades = rows3, portvals = rows4, metrics = metrics)
+
+if __name__ == '__main__':
+    app.run(debug=True)
